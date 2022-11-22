@@ -254,6 +254,7 @@ function criarRecado(userId, assunto, mensagem) {
 function deletaRecado(recadoId) {
   const recados = obterRecados().filter((recado) => recado.id !== recadoId);
   salvaRecados(recados);
+  atualizaTabelaRecados();
 }
 
 // retorna indexOf usuario no array de usuarios
@@ -318,8 +319,10 @@ function atualizaTabelaRecados() {
     // cria button Deletar
     const buttonDeletar = document.createElement("button");
     buttonDeletar.classList.add("btn", "btn-sm", "btn-outline-danger", "inline-block");
-    buttonDeletar.onclick = `carregarDeletar(${recado.id})`;
+    buttonDeletar.setAttribute("onClick", `carregarDeletar('${recado.id}')`);
     buttonDeletar.innerText = "Deletar";
+    buttonDeletar.setAttribute("data-bs-toggle", "modal");
+    buttonDeletar.setAttribute("data-bs-target", "#modalConfirmarExclusao");
     divButtons.appendChild(buttonDeletar);
     tdButtons.appendChild(divButtons);
     tr.appendChild(tdButtons);
@@ -347,4 +350,10 @@ function atualizaTabelaRecados() {
     trInfo.appendChild(tdEditado);
     recadosTableBody.appendChild(trInfo);
   });
+}
+
+// atualiza info modal para excluir recado
+function carregarDeletar(idRecado) {
+  const btnExcluirRegistroModal = document.getElementById("btnExcluirRegistroModal");
+  btnExcluirRegistroModal.setAttribute("onClick", `deletaRecado('${idRecado}')`);
 }
