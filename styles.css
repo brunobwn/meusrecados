@@ -1,0 +1,32 @@
+.bg-whitesmoke {
+  background-color: whitesmoke;
+}
+
+.form-login {
+  width: 100%;
+  max-width: 26rem;
+}
+
+.text-small {
+  font-size: 0.8rem;
+}
+
+.bg-darkTheme {
+  background-color: rgba(13, 17, 23, 255);
+}
+
+.text-underline-hover {
+  text-decoration: none;
+}
+
+.text-underline-hover:hover {
+  text-decoration: underline;
+}
+
+.text-trademark {
+  font-size: 2rem;
+}
+
+.table-arrow-td {
+  width: 1rem !important;
+}
