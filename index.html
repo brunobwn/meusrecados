@@ -40,14 +40,27 @@
         <form id="novoRecadoForm">
           <div class="row mb-2">
             <div class="col-md-4 mb-2 mb-md-0 pe-md-1">
-              <label for="inputEmail4" class="visually-hidden">Assunto</label>
-              <input type="email" class="form-control" id="inputEmail4" placeholder="Assunto" />
+              <label for="novoAssunto" class="visually-hidden">Assunto</label>
+              <input
+                type="text"
+                class="form-control"
+                id="novoAssunto"
+                name="assunto"
+                placeholder="Assunto"
+                required />
             </div>
             <div class="col col-md-8 ps-md-1">
-              <label for="inputEmail4" class="visually-hidden">Mensagem</label>
-              <input type="email" class="form-control" id="inputEmail4" placeholder="Mensagem" />
+              <label for="novoMensagem" class="visually-hidden">Mensagem</label>
+              <input
+                type="text"
+                class="form-control"
+                name="mensagem"
+                id="novoMensagem"
+                placeholder="Mensagem"
+                required />
             </div>
           </div>
+          <div id="formErrorFeedback" class="mb-2 text-danger text-small fw-semibold d-none"></div>
           <div class="row justify-content-end">
             <div class="d-flex d-md-flex justify-content-md-end justify-content-between gap-2">
               <button type="reset" class="btn btn-outline-secondary col col-md-3 col-lg-2">

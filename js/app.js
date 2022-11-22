@@ -117,14 +117,9 @@ novoRecadoForm?.addEventListener("submit", (e) => {
       return;
     }
   });
-
-  if (!conferirDadosLogin(user.username, user.password)) {
-    adicionaErroDiv("formErrorFeedback", "Usuário e/ou senha não conferem");
-    loginForm.reset();
-    return;
-  }
-
-  window.location.href = "index.html";
+  criarRecado(usuarioIdLogado(), inputs[0].value, inputs[1].value);
+  atualizaTabelaRecados();
+  novoRecadoForm.reset();
 });
 
 // funçao para validar inputs
@@ -281,7 +276,7 @@ function converteData(data) {
 function atualizaTabelaRecados() {
   recadosTableBody.innerHTML = "";
   const recados = obterRecados(usuarioIdLogado());
-  console.log(obterRecados());
+
   recados.forEach((recado) => {
     // cria <tr>
     const tr = document.createElement("tr");
@@ -295,10 +290,12 @@ function atualizaTabelaRecados() {
     tr.appendChild(tdIcon);
     // cria <td> assunto
     const tdAssunto = document.createElement("td");
+    tdAssunto.classList.add("text-break");
     tdAssunto.innerText = `${recado.assunto}`;
     tr.appendChild(tdAssunto);
     // cria <td> mensagem
     const tdMensagem = document.createElement("td");
+    tdMensagem.classList.add("text-break");
     tdMensagem.innerText = `${recado.mensagem}`;
     tr.appendChild(tdMensagem);
     // cria <td> buttons
