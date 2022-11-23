@@ -54,13 +54,16 @@ SignUpForm?.addEventListener("submit", (e) => {
   const inputs = e.target.querySelectorAll("input");
   const novoUser = { id: generateGuid(), criado_em: String(Date.now()) };
   // valida inputs
+  let error = false;
   inputs.forEach((input) => {
     novoUser[input.name] = input.value;
     if (!validarInput(input)) {
       adicionaErroDiv("formErrorFeedback", "Todos os campos devem ser preenchidos");
+      error = true;
       return;
     }
   });
+  if (error) return;
   if (novoUser.password !== novoUser.confirmPassword) {
     adicionaErroDiv("formErrorFeedback", "As senhas não conferem");
     return;
@@ -90,14 +93,16 @@ loginForm?.addEventListener("submit", (e) => {
   const inputs = e.target.querySelectorAll("input");
   const user = {};
   // valida inputs
+  let error = false;
   inputs.forEach((input) => {
     user[input.name] = input.value;
     if (!validarInput(input)) {
       adicionaErroDiv("formErrorFeedback", "Todos os campos devem ser preenchidos");
+      error = true;
       return;
     }
   });
-
+  if (error) return;
   if (!conferirDadosLogin(user.username, user.password)) {
     adicionaErroDiv("formErrorFeedback", "Usuário e/ou senha não conferem");
     loginForm.reset();
@@ -113,13 +118,16 @@ novoRecadoForm?.addEventListener("submit", (e) => {
   e.preventDefault();
   const inputs = e.target.querySelectorAll("input");
   const novoRecado = { userId: usuarioIdLogado() };
+  let error = false;
   inputs.forEach((input) => {
     if (!validarInput(input)) {
       adicionaErroDiv("formErrorFeedback", "Todos os campos devem ser preenchidos");
+      error = true;
       return;
     }
     novoRecado[input.name] = input.value;
   });
+  if (error) return;
   criarRecado(novoRecado.userId, novoRecado.assunto, novoRecado.mensagem);
   atualizaTabelaRecados();
   novoRecadoForm.reset();
@@ -421,6 +429,6 @@ function carregarEditar(idRecado) {
 }
 
 // limpa erro do modal editar ao sair da tela
-document.getElementById("modalEditarRecado").addEventListener("hidden.bs.modal", () => {
+document.getElementById("modalEditarRecado")?.addEventListener("hidden.bs.modal", () => {
   document.querySelector("#formEditarErrorFeedback").classList.add("d-none");
 });
