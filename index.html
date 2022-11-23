@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>meusRecados</title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -195,16 +196,15 @@
                       class="form-control"
                       required />
                   </div>
+                  <div
+                    id="formEditarErrorFeedback"
+                    class="mb-2 text-danger text-small fw-semibold d-none"></div>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     Cancelar
                   </button>
-                  <button
-                    type="submit"
-                    class="btn btn-primary"
-                    id="btnEditarRegistroModal"
-                    data-bs-dismiss="modal">
+                  <button type="button" class="btn btn-primary" id="btnEditarRegistroModal">
                     Editar
                   </button>
                 </div>
