@@ -6,6 +6,7 @@ if (
   !verificaSessaoUsuario() &&
   !(window.location.pathname === "/login.html" || window.location.pathname === "/cadastro.html")
 ) {
+  document.body.innerHTML = "";
   window.location.href = "login.html";
 }
 
@@ -111,21 +112,40 @@ const novoRecadoForm = document.querySelector("#novoRecadoForm");
 novoRecadoForm?.addEventListener("submit", (e) => {
   e.preventDefault();
   const inputs = e.target.querySelectorAll("input");
+  const novoRecado = { userId: usuarioIdLogado() };
   inputs.forEach((input) => {
     if (!validarInput(input)) {
       adicionaErroDiv("formErrorFeedback", "Todos os campos devem ser preenchidos");
       return;
     }
+    novoRecado[input.name] = input.value;
   });
-  criarRecado(usuarioIdLogado(), inputs[0].value, inputs[1].value);
+  criarRecado(novoRecado.userId, novoRecado.assunto, novoRecado.mensagem);
   atualizaTabelaRecados();
   novoRecadoForm.reset();
 });
 
 // form edita recado
 const editarRecadoForm = document.querySelector("#editarRecadoForm");
-editarRecadoForm?.addEventListener("submit", (e) => {
-  e.preventDefault;
+const btnEditarRegistroModal = document.querySelector("#btnEditarRegistroModal");
+btnEditarRegistroModal?.addEventListener("click", (e) => {
+  const inputs = editarRecadoForm.querySelectorAll("input");
+  const recadoEditado = {};
+  let error = false;
+  inputs.forEach((input) => {
+    if (!validarInput(input)) {
+      adicionaErroDiv("formEditarErrorFeedback", "Todos os campos devem ser preenchidos");
+      error = true;
+      return;
+    }
+    recadoEditado[input.name] = input.value;
+  });
+  if (error) return;
+  const modalEditar = bootstrap.Modal.getInstance(document.getElementById("modalEditarRecado"));
+  if (editarRecado(recadoEditado.id, recadoEditado.assunto, recadoEditado.mensagem))
+    modalEditar.hide();
+  editarRecadoForm.reset();
+  atualizaTabelaRecados();
 });
 
 // funçao para validar inputs
@@ -140,7 +160,7 @@ function validarInput(input) {
 
 // adiciona mensagem de erro a div especifica
 function adicionaErroDiv(divID, mensagem) {
-  const divError = document.querySelector(`#${divID}`);
+  const divError = document.getElementById(divID);
   divError.innerText = mensagem;
   divError.classList.remove("d-none");
 }
@@ -262,6 +282,24 @@ function criarRecado(userId, assunto, mensagem) {
   salvaRecados(recados);
 }
 
+// edita recado
+// retorna false se erro, ou true se tudo certo
+function editarRecado(recadoId, assunto, mensagem) {
+  if (!recadoId || !assunto || !mensagem) return;
+  const recadoEditar = obterRecado(recadoId);
+  if (!recadoEditar) return false;
+  recadoEditar.assunto = assunto;
+  recadoEditar.mensagem = mensagem;
+  recadoEditar.editado_em = String(new Date().toJSON());
+
+  const recados = obterRecados();
+  const indexOfRecadoAEditar = recados.map((recado) => recado.id).indexOf(recadoId);
+  if (indexOfRecadoAEditar < 0) return false;
+  recados[indexOfRecadoAEditar] = recadoEditar;
+  salvaRecados(recados);
+  return true;
+}
+
 // deleta recado
 function deletaRecado(recadoId) {
   const recados = obterRecados().filter((recado) => recado.id !== recadoId);
@@ -377,8 +415,12 @@ function carregarDeletar(idRecado) {
 function carregarEditar(idRecado) {
   const recado = obterRecado(idRecado);
   const inputs = editarRecadoForm.querySelectorAll("input");
-  console.log(inputs);
   inputs.forEach((input) => {
     input.value = recado[input.name];
   });
 }
+
+// limpa erro do modal editar ao sair da tela
+document.getElementById("modalEditarRecado").addEventListener("hidden.bs.modal", () => {
+  document.querySelector("#formEditarErrorFeedback").classList.add("d-none");
+});
