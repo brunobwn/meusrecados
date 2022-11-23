@@ -122,6 +122,12 @@ novoRecadoForm?.addEventListener("submit", (e) => {
   novoRecadoForm.reset();
 });
 
+// form edita recado
+const editarRecadoForm = document.querySelector("#editarRecadoForm");
+editarRecadoForm?.addEventListener("submit", (e) => {
+  e.preventDefault;
+});
+
 // funçao para validar inputs
 // retorna FALSE se possui erro
 function validarInput(input) {
@@ -201,6 +207,12 @@ function obterRecados(userId = null) {
   const recados = JSON.parse(localStorage.getItem(RECADOS_DB_NAME)) || [];
   if (userId) return recados.filter((recado) => recado.userId === userId);
   return recados;
+}
+
+// retorna recado especifico
+function obterRecado(recadoId) {
+  const recados = JSON.parse(localStorage.getItem(RECADOS_DB_NAME)) || [];
+  return recados.filter((recado) => recado.id === recadoId)[0];
 }
 
 // salva recados no localstorage
@@ -314,6 +326,9 @@ function atualizaTabelaRecados() {
     const buttonEditar = document.createElement("button");
     buttonEditar.classList.add("btn", "btn-sm", "btn-outline-primary");
     buttonEditar.onclick = `carregarEditar(${recado.id})`;
+    buttonEditar.setAttribute("onClick", `carregarEditar('${recado.id}')`);
+    buttonEditar.setAttribute("data-bs-toggle", "modal");
+    buttonEditar.setAttribute("data-bs-target", "#modalEditarRecado");
     buttonEditar.innerText = "Editar";
     divButtons.appendChild(buttonEditar);
     // cria button Deletar
@@ -356,4 +371,14 @@ function atualizaTabelaRecados() {
 function carregarDeletar(idRecado) {
   const btnExcluirRegistroModal = document.getElementById("btnExcluirRegistroModal");
   btnExcluirRegistroModal.setAttribute("onClick", `deletaRecado('${idRecado}')`);
+}
+
+// atualiza info modal para editar recado
+function carregarEditar(idRecado) {
+  const recado = obterRecado(idRecado);
+  const inputs = editarRecadoForm.querySelectorAll("input");
+  console.log(inputs);
+  inputs.forEach((input) => {
+    input.value = recado[input.name];
+  });
 }
