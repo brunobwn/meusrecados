@@ -154,6 +154,65 @@
           </div>
         </div>
       </section>
+      <section>
+        <!-- Modal Editar -->
+        <div
+          class="modal fade"
+          id="modalEditarRecado"
+          data-bs-backdrop="static"
+          data-bs-keyboard="false"
+          tabindex="-1"
+          aria-labelledby="modalEditarRecado"
+          aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <form id="editarRecadoForm">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="modalEditarRecadoLabel">Editar recado</h1>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <input type="hidden" name="id" id="idEditarRecado" value="" required />
+                  <div class="mb-3">
+                    <label for="assuntoEditarRecado">Assunto:</label>
+                    <input
+                      type="text"
+                      id="assuntoEditarRecado"
+                      name="assunto"
+                      class="form-control"
+                      required />
+                  </div>
+                  <div class="mb-3">
+                    <label for="mensagemEditarRecado">Recado:</label>
+                    <input
+                      type="text"
+                      id="mensagemEditarRecado"
+                      name="assunto"
+                      class="form-control"
+                      required />
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    class="btn btn-danger"
+                    id="btnExcluirRegistroModal"
+                    data-bs-dismiss="modal">
+                    Excluir
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
       <footer class="mt-auto">
         <p class="text-muted text-footer">
           Desenvolvido por
