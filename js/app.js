@@ -332,16 +332,41 @@ function converteData(data) {
   return `${data[2]}/${data[1]}/${data[0]}`;
 }
 
-function atualizaTabelaRecados() {
+function atualizaTabelaRecados(pagina = 1) {
   recadosTableBody.innerHTML = "";
   const recados = obterRecados(usuarioIdLogado());
+  const paginador = document.getElementById("paginador");
+  const QuantidadeRecadosPorPagina = Number(document.getElementById("qtdRecadosPagina").value);
+  const qtdPaginas = Math.ceil(recados.length / QuantidadeRecadosPorPagina);
 
-  recados.forEach((recado) => {
+  // cria paginador
+  paginador.innerHTML = "";
+  for (let i = 1; i <= qtdPaginas; i++) {
+    let li = document.createElement("l");
+    li.classList.add("page-item");
+    let a = document.createElement("a");
+    a.classList.add("page-link");
+    i === pagina && a.classList.add("active");
+    a.href = "#";
+    a.setAttribute("onClick", `atualizaTabelaRecados(${i})`);
+    a.innerText = i;
+    li.appendChild(a);
+    paginador.appendChild(li);
+  }
+  let start = QuantidadeRecadosPorPagina * (pagina - 1);
+  if (start > 0) start--;
+  console.log(start, start, QuantidadeRecadosPorPagina);
+  geraRowsTabelaRecados(recados, start, QuantidadeRecadosPorPagina);
+}
+
+function geraRowsTabelaRecados(recados, start, qtd) {
+  for (let i = start; i < start + qtd; i++) {
+    if (!recados[i]) break;
     // cria <tr>
     const tr = document.createElement("tr");
     tr.role = "button";
     tr.setAttribute("data-bs-toggle", "collapse");
-    tr.setAttribute("data-bs-target", `#recado_${recado.id}`);
+    tr.setAttribute("data-bs-target", `#recado_${recados[i].id}`);
     tr.classList.add("align-middle", "main-row-table");
     // cria <td> icon
     const tdIcon = document.createElement("td");
@@ -350,12 +375,12 @@ function atualizaTabelaRecados() {
     // cria <td> assunto
     const tdAssunto = document.createElement("td");
     tdAssunto.classList.add("text-break");
-    tdAssunto.innerText = `${recado.assunto}`;
+    tdAssunto.innerText = `${recados[i].assunto}`;
     tr.appendChild(tdAssunto);
     // cria <td> mensagem
     const tdMensagem = document.createElement("td");
     tdMensagem.classList.add("text-break");
-    tdMensagem.innerText = `${recado.mensagem}`;
+    tdMensagem.innerText = `${recados[i].mensagem}`;
     tr.appendChild(tdMensagem);
     // cria <td> buttons
     const tdButtons = document.createElement("td");
@@ -371,8 +396,8 @@ function atualizaTabelaRecados() {
     // cria button Editar
     const buttonEditar = document.createElement("button");
     buttonEditar.classList.add("btn", "btn-sm", "btn-outline-primary");
-    buttonEditar.onclick = `carregarEditar(${recado.id})`;
-    buttonEditar.setAttribute("onClick", `carregarEditar('${recado.id}')`);
+    buttonEditar.onclick = `carregarEditar(${recados[i].id})`;
+    buttonEditar.setAttribute("onClick", `carregarEditar('${recados[i].id}')`);
     buttonEditar.setAttribute("data-bs-toggle", "modal");
     buttonEditar.setAttribute("data-bs-target", "#modalEditarRecado");
     buttonEditar.innerText = "Editar";
@@ -380,7 +405,7 @@ function atualizaTabelaRecados() {
     // cria button Deletar
     const buttonDeletar = document.createElement("button");
     buttonDeletar.classList.add("btn", "btn-sm", "btn-outline-danger", "inline-block");
-    buttonDeletar.setAttribute("onClick", `carregarDeletar('${recado.id}')`);
+    buttonDeletar.setAttribute("onClick", `carregarDeletar('${recados[i].id}')`);
     buttonDeletar.innerText = "Deletar";
     buttonDeletar.setAttribute("data-bs-toggle", "modal");
     buttonDeletar.setAttribute("data-bs-target", "#modalConfirmarExclusao");
@@ -392,25 +417,100 @@ function atualizaTabelaRecados() {
     // cria tr com info extra
     const trInfo = document.createElement("tr");
     trInfo.classList.add("collapse", "accordion-collapse");
-    trInfo.id = `recado_${recado.id}`;
+    trInfo.id = `recado_${recados[i].id}`;
     trInfo.setAttribute("data-bs-parent", `.table`);
     const tdCriado = document.createElement("td");
     tdCriado.colSpan = "2";
     tdCriado.classList.add("text-center", "text-small");
     tdCriado.innerHTML = `<span class="fw-bold">Criado em: </span><br /><span>${converteData(
-      recado.criado_em
+      recados[i].criado_em
     )}</span>`;
     const tdEditado = document.createElement("td");
     tdEditado.colSpan = "2";
     tdEditado.classList.add("text-center", "text-small");
     tdEditado.innerHTML = `<span class="fw-bold">Editado em: </span><br /><span>${converteData(
-      recado.editado_em
+      recados[i].editado_em
     )}</span>`;
 
     trInfo.appendChild(tdCriado);
     trInfo.appendChild(tdEditado);
     recadosTableBody.appendChild(trInfo);
-  });
+  }
+  // recados.forEach((recado) => {
+  //   // cria <tr>
+  //   const tr = document.createElement("tr");
+  //   tr.role = "button";
+  //   tr.setAttribute("data-bs-toggle", "collapse");
+  //   tr.setAttribute("data-bs-target", `#recado_${recado.id}`);
+  //   tr.classList.add("align-middle", "main-row-table");
+  //   // cria <td> icon
+  //   const tdIcon = document.createElement("td");
+  //   tdIcon.innerHTML = "<i class='bi bi-chevron-down'></i>";
+  //   tr.appendChild(tdIcon);
+  //   // cria <td> assunto
+  //   const tdAssunto = document.createElement("td");
+  //   tdAssunto.classList.add("text-break");
+  //   tdAssunto.innerText = `${recado.assunto}`;
+  //   tr.appendChild(tdAssunto);
+  //   // cria <td> mensagem
+  //   const tdMensagem = document.createElement("td");
+  //   tdMensagem.classList.add("text-break");
+  //   tdMensagem.innerText = `${recado.mensagem}`;
+  //   tr.appendChild(tdMensagem);
+  //   // cria <td> buttons
+  //   const tdButtons = document.createElement("td");
+  //   const divButtons = document.createElement("div");
+  //   divButtons.classList.add(
+  //     "d-flex",
+  //     "flex-column",
+  //     "flex-md-row",
+  //     "gap-2",
+  //     "justify-content-center",
+  //     "align-content-center"
+  //   );
+  //   // cria button Editar
+  //   const buttonEditar = document.createElement("button");
+  //   buttonEditar.classList.add("btn", "btn-sm", "btn-outline-primary");
+  //   buttonEditar.onclick = `carregarEditar(${recado.id})`;
+  //   buttonEditar.setAttribute("onClick", `carregarEditar('${recado.id}')`);
+  //   buttonEditar.setAttribute("data-bs-toggle", "modal");
+  //   buttonEditar.setAttribute("data-bs-target", "#modalEditarRecado");
+  //   buttonEditar.innerText = "Editar";
+  //   divButtons.appendChild(buttonEditar);
+  //   // cria button Deletar
+  //   const buttonDeletar = document.createElement("button");
+  //   buttonDeletar.classList.add("btn", "btn-sm", "btn-outline-danger", "inline-block");
+  //   buttonDeletar.setAttribute("onClick", `carregarDeletar('${recado.id}')`);
+  //   buttonDeletar.innerText = "Deletar";
+  //   buttonDeletar.setAttribute("data-bs-toggle", "modal");
+  //   buttonDeletar.setAttribute("data-bs-target", "#modalConfirmarExclusao");
+  //   divButtons.appendChild(buttonDeletar);
+  //   tdButtons.appendChild(divButtons);
+  //   tr.appendChild(tdButtons);
+  //   recadosTableBody.appendChild(tr);
+
+  //   // cria tr com info extra
+  //   const trInfo = document.createElement("tr");
+  //   trInfo.classList.add("collapse", "accordion-collapse");
+  //   trInfo.id = `recado_${recado.id}`;
+  //   trInfo.setAttribute("data-bs-parent", `.table`);
+  //   const tdCriado = document.createElement("td");
+  //   tdCriado.colSpan = "2";
+  //   tdCriado.classList.add("text-center", "text-small");
+  //   tdCriado.innerHTML = `<span class="fw-bold">Criado em: </span><br /><span>${converteData(
+  //     recado.criado_em
+  //   )}</span>`;
+  //   const tdEditado = document.createElement("td");
+  //   tdEditado.colSpan = "2";
+  //   tdEditado.classList.add("text-center", "text-small");
+  //   tdEditado.innerHTML = `<span class="fw-bold">Editado em: </span><br /><span>${converteData(
+  //     recado.editado_em
+  //   )}</span>`;
+
+  //   trInfo.appendChild(tdCriado);
+  //   trInfo.appendChild(tdEditado);
+  //   recadosTableBody.appendChild(trInfo);
+  // });
 }
 
 // atualiza info modal para excluir recado
