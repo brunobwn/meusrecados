@@ -358,6 +358,7 @@ function atualizaTabelaRecados(pagina = 1) {
 
 function geraRowsTabelaRecados(recados, start, qtd) {
   recadosTableBody.innerHTML = "";
+  if (start > recados.length) return;
   for (let i = start - 1; i > start - qtd - 1; i--) {
     if (i < 0) break;
     // cria <tr>
