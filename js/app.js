@@ -333,7 +333,6 @@ function converteData(data) {
 }
 
 function atualizaTabelaRecados(pagina = 1) {
-  recadosTableBody.innerHTML = "";
   const recados = obterRecados(usuarioIdLogado());
   const paginador = document.getElementById("paginador");
   const QuantidadeRecadosPorPagina = Number(document.getElementById("qtdRecadosPagina").value);
@@ -353,15 +352,14 @@ function atualizaTabelaRecados(pagina = 1) {
     li.appendChild(a);
     paginador.appendChild(li);
   }
-  let start = QuantidadeRecadosPorPagina * (pagina - 1);
-  if (start > 0) start--;
-  console.log(start, start, QuantidadeRecadosPorPagina);
+  let start = recados.length - QuantidadeRecadosPorPagina * (pagina - 1);
   geraRowsTabelaRecados(recados, start, QuantidadeRecadosPorPagina);
 }
 
 function geraRowsTabelaRecados(recados, start, qtd) {
-  for (let i = start; i < start + qtd; i++) {
-    if (!recados[i]) break;
+  recadosTableBody.innerHTML = "";
+  for (let i = start - 1; i > start - qtd - 1; i--) {
+    if (i < 0) break;
     // cria <tr>
     const tr = document.createElement("tr");
     tr.role = "button";
