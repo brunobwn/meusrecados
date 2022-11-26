@@ -2,9 +2,10 @@ const USERS_DB_NAME = "meusRecadosAppUsers";
 const RECADOS_DB_NAME = "meusRecadosAppRecados";
 const SESSION_NAME = "meusRecadosApp";
 
+const nomePaginaAcesso = location.pathname.substring(location.pathname.lastIndexOf("/") + 1);
 if (
   !verificaSessaoUsuario() &&
-  !(window.location.pathname === "/login.html" || window.location.pathname === "/cadastro.html")
+  !(nomePaginaAcesso === "login.html" || nomePaginaAcesso === "cadastro.html")
 ) {
   document.body.innerHTML = "";
   window.location.href = "login.html";
