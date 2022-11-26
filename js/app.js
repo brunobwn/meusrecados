@@ -354,7 +354,25 @@ function atualizaTabelaRecados(pagina = 1) {
     paginador.appendChild(li);
   }
   let start = recados.length - QuantidadeRecadosPorPagina * (pagina - 1);
-  geraRowsTabelaRecados(recados, start, QuantidadeRecadosPorPagina);
+
+  recados.length
+    ? geraRowsTabelaRecados(recados, start, QuantidadeRecadosPorPagina)
+    : geraRowSemRecados();
+}
+
+function geraRowSemRecados() {
+  recadosTableBody.innerHTML = "";
+  // cria <tr>
+  const tr = document.createElement("tr");
+  // cria <td> icon
+  const td = document.createElement("td");
+  td.colSpan = "4";
+  td.classList.add("text-muted", "text-center");
+  td.innerHTML =
+    "<span class='fst-italic'>Ops... Parece que você não tem nenhum recado ainda</span> 😢";
+
+  tr.appendChild(td);
+  recadosTableBody.appendChild(tr);
 }
 
 function geraRowsTabelaRecados(recados, start, qtd) {
